@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tuandai.bigdata.baseproject.dao.tuandaibm.TotalServiceCompanyPersonMapper">
+
+    <select id="findTscp" resultType="com.tuandai.bigdata.baseproject.model.TotalServiceCompanyPersonalModel">
+SELECT SUM(tt.cnt) AS sumServicePerson FROM (
+SELECT COUNT(DISTINCT t.identify_card) cnt FROM tb_fsd_customer  t JOIN tb_car_business_log aa ON t.`business_id`=aa.`car_business_id` WHERE t.`customer_type`='个人'
+UNION
+SELECT COUNT(DISTINCT t.id_card_no) cnt FROM tb_car_personal  t JOIN tb_car_business_log aa ON t.`car_business_id`=aa.`car_business_id` WHERE t.`customer_type`='个人'
+UNION
+SELECT COUNT(DISTINCT t.business_licence) cnt FROM tb_fsd_customer  t JOIN tb_car_business_log aa ON t.`business_id`=aa.`car_business_id` WHERE t.`customer_type`!='个人'
+UNION
+SELECT COUNT(DISTINCT t.business_licence) cnt FROM tb_car_personal  t JOIN tb_car_business_log aa ON t.`car_business_id`=aa.`car_business_id` WHERE t.`customer_type`!='个人'
+UNION
+SELECT COUNT(1) cnt FROM tb_yidian_car_personal_information tf JOIN tb_issue_business t ON tf.`business_id`=t.`business_id`
+ JOIN tb_issue ti ON  t.`issue_id`=ti.`IssueId` JOIN tb_yidian_business_information tbi ON t.`business_id`=tbi.`business_id`
+WHERE ti.queryFullsuccessDate IS NOT NULL
+) tt
+    </select>
+
+</mapper>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tuandai.bigdata.baseproject.dao.tuandaibm.ServiceCustormProfessionSpreadMapper">
+    <resultMap type="com.tuandai.bigdata.baseproject.model.ServiceCustormProfessionSpreadModel" id="serviceCustormProfessionSpreadModelList">
+        <result column="profession" property="profession"/>
+        <result column="cnt"  property="cnt"/>
+    </resultMap>
+    <select id="findScpsList" resultMap="serviceCustormProfessionSpreadModelList">
+SELECT tt.profession,COUNT(1) cnt FROM (
+SELECT tp.PARA_VALUE AS  profession FROM tb_parameter  tp JOIN  tb_fsd_customer  t ON tp.para_order=t.`profession` JOIN  (SELECT aa.car_business_id FROM tb_car_business_log aa
+ WHERE aa.log_content='出款申请' GROUP BY aa.car_business_id) aa ON t.`business_id`=aa.`car_business_id` WHERE  tp.PARA_NAME = "职业信息" AND tp.`PARA_TYPE` = "行业类别"
+UNION ALL
+SELECT tj.job_duty AS profession FROM  tb_car_job tj JOIN  tb_car_personal  t ON tj.car_business_id=t.car_business_id JOIN
+ (SELECT aa.car_business_id FROM tb_car_business_log aa  WHERE  aa.log_content='出款申请' AND aa.log_type!='50' GROUP BY aa.car_business_id) aa ON t.`car_business_id`=aa.`car_business_id`
+ UNION ALL
+ SELECT tp.PARA_VALUE AS  profession FROM tb_parameter  tp JOIN  tb_fsd_customer  t ON tp.para_order=t.`profession` JOIN  (SELECT aa.car_business_id FROM tb_car_business_log aa
+ WHERE aa.log_content='出款申请' GROUP BY aa.car_business_id) aa ON t.`business_id`=aa.`car_business_id` JOIN tb_output_list tl ON tl.BUSINESS_ID=t.`business_id`
+   JOIN tb_business tb ON tb.business_id=t.`business_id`
+  WHERE  tp.PARA_NAME = "职业信息" AND tp.`PARA_TYPE` = "行业类别"  AND tb.issue_type!=1
+ UNION ALL
+ SELECT tj.job_duty AS profession FROM  tb_car_job tj JOIN  tb_car_personal  t ON tj.car_business_id=t.car_business_id JOIN
+ (SELECT aa.car_business_id FROM tb_car_business_log aa  WHERE  aa.log_content='出款申请' AND aa.log_type!='50' GROUP BY aa.car_business_id) aa ON t.`car_business_id`=aa.`car_business_id`
+  JOIN tb_business tb ON tb.business_id=t.`car_business_id` AND tb.issue_type!=1
+) tt
+GROUP BY tt.profession;
+    </select>
+
+</mapper>

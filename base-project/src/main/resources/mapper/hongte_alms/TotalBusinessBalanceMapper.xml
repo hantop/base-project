@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tuandai.bigdata.baseproject.dao.hongtealms.TotalBusinessBalanceMapper">
+
+    <select id="findTbb" resultType="com.tuandai.bigdata.baseproject.model.TotalBusinessBalanceModel">
+ SELECT SUM(
+     CASE t2.plan_item_type
+     WHEN 10
+     THEN IFNULL(t2.fact_amount, 0)
+     ELSE 0 END
+ ) factAmount FROM `hongte_alms`.tb_repayment_biz_plan_list_detail t2
+    </select>
+
+</mapper>

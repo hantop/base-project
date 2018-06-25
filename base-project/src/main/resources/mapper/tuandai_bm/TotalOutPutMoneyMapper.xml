@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tuandai.bigdata.baseproject.dao.tuandaibm.TotalOutPutMoneyMapper">
+
+    <select id="findTotalOutPutMoneyByDay" resultType="com.tuandai.bigdata.baseproject.model.TotalOutPutMoneyModel">
+     SELECT SUM(t.total_sum_amt) AS totalSumAmt FROM(
+SELECT IFNULL(SUM(t.`full_borrow_money`),0) AS total_sum_amt FROM tb_issue_business t JOIN tb_issue ti ON t.`issue_id`=ti.`IssueId`
+WHERE ti.queryFullsuccessDate IS NOT NULL
+UNION
+SELECT IFNULL(SUM(ti.`Amount`),0) AS total_sum_amt FROM tb_issue_business t JOIN tb_issue ti ON t.`issue_id`=ti.`IssueId`
+WHERE ti.queryFullsuccessDate IS NOT NULL  AND ti.`ProjectFrom`=1
+UNION
+SELECT SUM(t.`OUTPUT_MONEY`) AS total_sum_amt FROM tb_output_list t JOIN tb_business tt ON t.`BUSINESS_ID`=tt.`business_id` WHERE tt.issue_type!=1
+) t
+
+</select>
+
+</mapper>

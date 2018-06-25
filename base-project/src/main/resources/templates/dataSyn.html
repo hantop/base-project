@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script th:src="@{/js/jquery-3.1.1.min.js}"></script>
+    <title>数据展示</title>
+</head>
+<body>
+<h2>数据展示</h2>
+<div class="grop-botton">
+    <button type="submit" class="b-clean"><i></i>清空hbase</button>
+    <button type="restart" class="b-restart"><i></i>重启任务</button>
+</div>
+<table style="border-width: 1px;border-style: dashed;">
+    <table>
+        <thead>
+        <tr>
+            <th>名称</th>
+            <th>hbase数值</th>
+            <th>mysql数值</th>
+            <th>是否一致</th>
+            <th>时间</th>
+        </tr>
+        </thead>
+        <tbody th:remove="all-but-first">
+        <tr th:each="item : ${list}">
+            <th><a th:text="${{item.fieldName}}"></a></th>
+            <th><a th:text="${{item.hbaseValue}}"></a></th>
+            <th><a th:text="${{item.mysqlValue}}"></a></th>
+            <th><a th:text="${{item.status}}"></a></th>
+            <th><a th:text="${{item.dateTime}}"></a></th>
+        </tr>
+        </tbody>
+    </table>
+</table>
+
+<div th:include="page :: page" url="/data/syn"></div>
+</body>
+<script>
+    $('.b-clean').click(function () {
+        alert("是否清空");
+        window.location.href = "/data/clean?clean=Y";
+    })
+</script>
+<script>
+    $('.b-restart').click(function () {
+        alert("是否重启");
+        window.location.href = "/data/restart?restart=Y";
+    })
+</script>
+
+
+</html>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tuandai.bigdata.baseproject.dao.tuandaibm.ServiceCustomAreaSpreadMapper">
+    <resultMap type="com.tuandai.bigdata.baseproject.model.ServiceCustomAreaSpreadModel" id="serviceCustomAreaSpreadModelList">
+        <result column="province" property="province"/>
+        <result column="cnt"  property="cnt"/>
+    </resultMap>
+    <select id="findScasList" resultMap="serviceCustomAreaSpreadModelList">
+SELECT t.province,COUNT(1) cnt FROM (
+SELECT tt.`branch_province` AS province FROM tb_department tt JOIN tb_business tb ON tt.`DEPT_ID`=tb.`branch_id` JOIN tb_fsd_customer  t ON tb.`business_id`=t.`business_id`
+JOIN (SELECT aa.car_business_id FROM tb_car_business_log aa  WHERE  aa.log_content='出款申请' AND aa.log_type!='50' GROUP BY aa.car_business_id)  aa ON t.`business_id`=aa.`car_business_id`
+UNION ALL
+SELECT CONCAT(t.id_card_sheng,'省') AS province FROM tb_car_personal  t JOIN
+(SELECT aa.car_business_id FROM tb_car_business_log aa  WHERE  aa.log_content='出款申请' AND aa.log_type!='50' GROUP BY aa.car_business_id) aa ON t.`car_business_id`=aa.`car_business_id`
+UNION ALL
+SELECT a.`account_province` AS province FROM tb_yidian_car_personal_information a JOIN tb_issue_business t ON a.`business_id`=t.`business_id` JOIN tb_issue ti ON  t.`issue_id`=ti.`IssueId` JOIN tb_yidian_business_information tbi ON t.`business_id`=tbi.`business_id`
+WHERE ti.queryFullsuccessDate IS NOT NULL
+) t WHERE t.province !=''
+GROUP BY t.province;
+    </select>
+
+</mapper>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tuandai.bigdata.baseproject.dao.tuandaibm.BorrowLimitSpreadMapper">
+    <resultMap type="com.tuandai.bigdata.baseproject.model.BorrowLimitSpreadModel" id="borrowLimitSpreadModelList">
+        <result column="borrow_limit" property="borrow_limit"/>
+        <result column="cnt"  property="cnt"/>
+    </resultMap>
+    <select id="findBorrowLimitList" resultMap="borrowLimitSpreadModelList">
+SELECT  tt.PeriodMonth AS borrow_limit,COUNT(1) cnt FROM (SELECT ti.`PeriodMonth` FROM tb_issue_business t JOIN tb_issue ti ON t.`issue_id`=ti.`IssueId` WHERE ti.queryFullsuccessDate IS NOT NULL
+UNION ALL
+SELECT ti.`PeriodMonth` FROM tb_issue_business t JOIN tb_issue ti ON  t.`issue_id`=ti.`IssueId` JOIN tb_yidian_business_information tbi ON t.`business_id`=tbi.`business_id`
+WHERE ti.queryFullsuccessDate IS NOT NULL
+) tt
+GROUP BY tt.PeriodMonth
+    </select>
+
+</mapper>

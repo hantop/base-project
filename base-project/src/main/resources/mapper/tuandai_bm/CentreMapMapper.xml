@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tuandai.bigdata.baseproject.dao.tuandaibm.CentreMapMapper">
+    <resultMap type="com.tuandai.bigdata.baseproject.model.CentreMapModel" id="centreMapModelList">
+        <result column="areaAmount" property="areaAmount"/>
+        <result column="area"  property="area"/>
+    </resultMap>
+    <select id="findCentreMapModel" resultMap="centreMapModelList">
+    SELECT SUM(tt.sum_amt) AS areaAmount,province as area FROM (
+SELECT IFNULL(SUM(t.`full_borrow_money`),0) AS sum_amt,tc.`province` FROM  tb_fsd_customer tc JOIN tb_issue_business t ON tc.`business_id`=t.`business_id` JOIN tb_issue ti ON t.`issue_id`=ti.`IssueId` WHERE ti.queryFullsuccessDate IS NOT NULL
+AND t.`business_id` IN (SELECT tb.`business_id` FROM tb_business tb WHERE tb.`business_type` LIKE '%房速贷%' OR tb.`business_type`='T251')
+GROUP BY tc.`province`
+UNION ALL
+SELECT IFNULL(SUM(t.`full_borrow_money`),0) AS sum_amt,tc.`id_card_sheng` AS province FROM tb_car_personal tc JOIN tb_issue_business t ON tc.`car_business_id`=t.`business_id` JOIN tb_issue ti ON t.`issue_id`=ti.`IssueId` WHERE ti.queryFullsuccessDate IS NOT NULL
+AND t.`business_id` IN (SELECT tb.`business_id` FROM tb_business tb WHERE tb.`business_type` LIKE '%车易贷%')
+GROUP BY tc.`id_card_sheng`
+UNION ALL
+SELECT IFNULL(SUM(t.`full_borrow_money`),0) AS sum_amt,tt.`live_province` AS province  FROM tb_yidian_car_personal_information tt JOIN tb_issue_business t ON tt.`business_id`=t.`business_id` JOIN tb_issue ti ON  t.`issue_id`=ti.`IssueId` JOIN tb_yidian_business_information tbi ON t.`business_id`=tbi.`business_id`
+WHERE ti.queryFullsuccessDate IS NOT NULL
+GROUP BY tt.`account_province`
+) tt
+GROUP BY area;
+    </select>
+
+</mapper>

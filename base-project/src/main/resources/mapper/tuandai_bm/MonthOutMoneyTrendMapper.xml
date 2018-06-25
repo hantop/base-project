@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tuandai.bigdata.baseproject.dao.tuandaibm.MonthOutPutMoneyTrendMapper">
+    <resultMap type="com.tuandai.bigdata.baseproject.model.MonthOutPutMoneyTrendModel" id="monthOutPutMoneyTrendModelList">
+        <result column="sum_amt" property="sum_amt"/>
+        <result column="date_time"  property="date_time"/>
+        <result column="business_type"  property="business_type"/>
+    </resultMap>
+    <select id="findMopmt" resultMap="monthOutPutMoneyTrendModelList">
+SELECT IFNULL(SUM(t.`full_borrow_money`),0) AS sum_amt,DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -5 MONTH),'%Y-%m') date_time,'house' AS business_type FROM tb_issue_business t JOIN tb_issue ti ON t.`issue_id`=ti.`IssueId` WHERE ti.queryFullsuccessDate IS NOT NULL
+AND DATE_FORMAT(ti.queryFullsuccessDate,'%Y-%m')=DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -5 MONTH),'%Y-%m')
+AND t.`business_id` IN (SELECT tb.`business_id` FROM tb_business tb WHERE tb.`business_type` LIKE '%房速贷%' OR tb.`business_type` IN ('T100','T110'))
+UNION
+SELECT IFNULL(SUM(t.`full_borrow_money`),0) AS sum_amt,DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -4 MONTH),'%Y-%m') date_time,'house' AS business_type FROM tb_issue_business t JOIN tb_issue ti ON t.`issue_id`=ti.`IssueId` WHERE ti.queryFullsuccessDate IS NOT NULL
+AND DATE_FORMAT(ti.queryFullsuccessDate,'%Y-%m')=DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -4 MONTH),'%Y-%m')
+AND t.`business_id` IN (SELECT tb.`business_id` FROM tb_business tb WHERE tb.`business_type` LIKE '%房速贷%' OR tb.`business_type` IN ('T100','T110'))
+UNION
+SELECT IFNULL(SUM(t.`full_borrow_money`),0) AS sum_amt,DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -3 MONTH),'%Y-%m') date_time,'house' AS business_type FROM tb_issue_business t JOIN tb_issue ti ON t.`issue_id`=ti.`IssueId` WHERE ti.queryFullsuccessDate IS NOT NULL
+AND DATE_FORMAT(ti.queryFullsuccessDate,'%Y-%m')=DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -3 MONTH),'%Y-%m')
+AND t.`business_id` IN (SELECT tb.`business_id` FROM tb_business tb WHERE tb.`business_type` LIKE '%房速贷%' OR tb.`business_type` IN ('T100','T110'))
+UNION
+SELECT IFNULL(SUM(t.`full_borrow_money`),0) AS sum_amt,DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -2 MONTH),'%Y-%m') date_time,'house' AS business_type FROM tb_issue_business t JOIN tb_issue ti ON t.`issue_id`=ti.`IssueId` WHERE ti.queryFullsuccessDate IS NOT NULL
+AND DATE_FORMAT(ti.queryFullsuccessDate,'%Y-%m')=DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -2 MONTH),'%Y-%m')
+AND t.`business_id` IN (SELECT tb.`business_id` FROM tb_business tb WHERE tb.`business_type` LIKE '%房速贷%' OR tb.`business_type` IN ('T100','T110'))
+UNION
+SELECT IFNULL(SUM(t.`full_borrow_money`),0) AS sum_amt,DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -1 MONTH),'%Y-%m') date_time,'house' AS business_type FROM tb_issue_business t JOIN tb_issue ti ON t.`issue_id`=ti.`IssueId` WHERE ti.queryFullsuccessDate IS NOT NULL
+AND DATE_FORMAT(ti.queryFullsuccessDate,'%Y-%m')=DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -1 MONTH),'%Y-%m')
+AND t.`business_id` IN (SELECT tb.`business_id` FROM tb_business tb WHERE tb.`business_type` LIKE '%房速贷%' OR tb.`business_type` IN ('T100','T110'))
+UNION
+SELECT IFNULL(SUM(t.`full_borrow_money`),0) AS sum_amt,DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL 0 MONTH),'%Y-%m') date_time,'house' AS business_type FROM tb_issue_business t JOIN tb_issue ti ON t.`issue_id`=ti.`IssueId` WHERE ti.queryFullsuccessDate IS NOT NULL
+AND DATE_FORMAT(ti.queryFullsuccessDate,'%Y-%m')=DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL 0 MONTH),'%Y-%m')
+AND t.`business_id` IN (SELECT tb.`business_id` FROM tb_business tb WHERE tb.`business_type` LIKE '%房速贷%' OR tb.`business_type` IN ('T100','T110'))
+UNION
+-- 车易贷
+SELECT SUM(t.sum_amt) AS sum_amt,date_time,'car' AS business_type FROM (
+SELECT IFNULL(SUM(t.`full_borrow_money`),0) AS sum_amt,DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -5 MONTH),'%Y-%m') date_time,'car_easy'  FROM tb_issue_business t JOIN tb_issue ti ON t.`issue_id`=ti.`IssueId` WHERE ti.queryFullsuccessDate IS NOT NULL
+AND DATE_FORMAT(ti.queryFullsuccessDate,'%Y-%m')=DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -5 MONTH),'%Y-%m')
+AND t.`business_id` IN (SELECT tb.`business_id` FROM tb_business tb WHERE tb.`business_type` LIKE '%车易贷%')
+UNION
+SELECT IFNULL(SUM(t.`full_borrow_money`),0) AS sum_amt,DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -4 MONTH),'%Y-%m') date_time,'car_easy'  FROM tb_issue_business t JOIN tb_issue ti ON t.`issue_id`=ti.`IssueId` WHERE ti.queryFullsuccessDate IS NOT NULL
+AND DATE_FORMAT(ti.queryFullsuccessDate,'%Y-%m')=DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -4 MONTH),'%Y-%m')
+AND t.`business_id` IN (SELECT tb.`business_id` FROM tb_business tb WHERE tb.`business_type` LIKE '%车易贷%')
+UNION
+SELECT IFNULL(SUM(t.`full_borrow_money`),0) AS sum_amt,DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -3 MONTH),'%Y-%m') date_time,'car_easy'  FROM tb_issue_business t JOIN tb_issue ti ON t.`issue_id`=ti.`IssueId` WHERE ti.queryFullsuccessDate IS NOT NULL
+AND DATE_FORMAT(ti.queryFullsuccessDate,'%Y-%m')=DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -3 MONTH),'%Y-%m')
+AND t.`business_id` IN (SELECT tb.`business_id` FROM tb_business tb WHERE tb.`business_type` LIKE '%车易贷%')
+UNION
+SELECT IFNULL(SUM(t.`full_borrow_money`),0) AS sum_amt,DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -2 MONTH),'%Y-%m') date_time,'car_easy'  FROM tb_issue_business t JOIN tb_issue ti ON t.`issue_id`=ti.`IssueId` WHERE ti.queryFullsuccessDate IS NOT NULL
+AND DATE_FORMAT(ti.queryFullsuccessDate,'%Y-%m')=DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -2 MONTH),'%Y-%m')
+AND t.`business_id` IN (SELECT tb.`business_id` FROM tb_business tb WHERE tb.`business_type` LIKE '%车易贷%')
+UNION
+SELECT IFNULL(SUM(t.`full_borrow_money`),0) AS sum_amt,DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -1 MONTH),'%Y-%m') date_time,'car_easy'  FROM tb_issue_business t JOIN tb_issue ti ON t.`issue_id`=ti.`IssueId` WHERE ti.queryFullsuccessDate IS NOT NULL
+AND DATE_FORMAT(ti.queryFullsuccessDate,'%Y-%m')=DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -1 MONTH),'%Y-%m')
+AND t.`business_id` IN (SELECT tb.`business_id` FROM tb_business tb WHERE tb.`business_type` LIKE '%车易贷%')
+UNION
+SELECT IFNULL(SUM(t.`full_borrow_money`),0) AS sum_amt,DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL 0 MONTH),'%Y-%m') date_time,'car_easy'  FROM tb_issue_business t JOIN tb_issue ti ON t.`issue_id`=ti.`IssueId` WHERE ti.queryFullsuccessDate IS NOT NULL
+AND DATE_FORMAT(ti.queryFullsuccessDate,'%Y-%m')=DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL 0 MONTH),'%Y-%m')
+AND t.`business_id` IN (SELECT tb.`business_id` FROM tb_business tb WHERE tb.`business_type` LIKE '%车易贷%')
+-- 一点车贷
+UNION
+SELECT IFNULL(SUM(ti.`Amount`),0) AS sum_amt,DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -5 MONTH),'%Y-%m') date_time,'yidian_car'  FROM tb_issue_business t JOIN tb_issue ti ON  t.`issue_id`=ti.`IssueId`
+WHERE ti.queryFullsuccessDate IS NOT NULL  AND ti.`ProjectFrom`=1
+AND DATE_FORMAT(ti.queryFullsuccessDate,'%Y-%m')=DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -5 MONTH),'%Y-%m')
+UNION
+SELECT IFNULL(SUM(ti.`Amount`),0) AS sum_amt,DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -4 MONTH),'%Y-%m') date_time,'yidian_car'  FROM tb_issue_business t JOIN tb_issue ti ON  t.`issue_id`=ti.`IssueId`
+WHERE ti.queryFullsuccessDate IS NOT NULL AND ti.`ProjectFrom`=1
+AND DATE_FORMAT(ti.queryFullsuccessDate,'%Y-%m')=DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -4 MONTH),'%Y-%m')
+UNION
+SELECT IFNULL(SUM(ti.`Amount`),0) AS sum_amt,DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -3 MONTH),'%Y-%m') date_time,'yidian_car'  AS business_type FROM tb_issue_business t JOIN tb_issue ti ON  t.`issue_id`=ti.`IssueId`
+WHERE ti.queryFullsuccessDate IS NOT NULL AND ti.`ProjectFrom`=1
+AND DATE_FORMAT(ti.queryFullsuccessDate,'%Y-%m')=DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -3 MONTH),'%Y-%m')
+UNION
+SELECT IFNULL(SUM(ti.`Amount`),0) AS sum_amt,DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -2 MONTH),'%Y-%m') date_time,'yidian_car'  FROM tb_issue_business t JOIN tb_issue ti ON  t.`issue_id`=ti.`IssueId`
+WHERE ti.queryFullsuccessDate IS NOT NULL AND ti.`ProjectFrom`=1
+AND DATE_FORMAT(ti.queryFullsuccessDate,'%Y-%m')=DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -2 MONTH),'%Y-%m')
+UNION
+SELECT IFNULL(SUM(ti.`Amount`),0) AS sum_amt,DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -1 MONTH),'%Y-%m') date_time,'yidian_car'  FROM tb_issue_business t JOIN tb_issue ti ON  t.`issue_id`=ti.`IssueId`
+WHERE ti.queryFullsuccessDate IS NOT NULL AND ti.`ProjectFrom`=1
+AND DATE_FORMAT(ti.queryFullsuccessDate,'%Y-%m')=DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -1 MONTH),'%Y-%m')
+UNION
+SELECT IFNULL(SUM(ti.`Amount`),0) AS sum_amt,DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL 0 MONTH),'%Y-%m') date_time,'yidian_car'  FROM tb_issue_business t JOIN tb_issue ti ON  t.`issue_id`=ti.`IssueId`
+WHERE ti.queryFullsuccessDate IS NOT NULL AND ti.`ProjectFrom`=1
+AND DATE_FORMAT(ti.queryFullsuccessDate,'%Y-%m')=DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL 0 MONTH),'%Y-%m')
+) t GROUP BY t.date_time
+UNION
+-- 小微贷
+SELECT IFNULL(SUM(t.`full_borrow_money`),0) AS sum_amt,DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -5 MONTH),'%Y-%m') date_time,'small' AS business_type FROM tb_issue_business t JOIN tb_issue ti ON t.`issue_id`=ti.`IssueId` WHERE ti.queryFullsuccessDate IS NOT NULL
+AND DATE_FORMAT(ti.queryFullsuccessDate,'%Y-%m')=DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -5 MONTH),'%Y-%m')
+AND t.`business_id` IN (SELECT tb.`business_id` FROM tb_business tb WHERE tb.`business_type`='T251' OR tb.`business_type` IN('T160','T170'))
+UNION
+SELECT IFNULL(SUM(t.`full_borrow_money`),0) AS sum_amt,DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -4 MONTH),'%Y-%m') date_time,'small' AS business_type FROM tb_issue_business t JOIN tb_issue ti ON t.`issue_id`=ti.`IssueId` WHERE ti.queryFullsuccessDate IS NOT NULL
+AND DATE_FORMAT(ti.queryFullsuccessDate,'%Y-%m')=DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -4 MONTH),'%Y-%m')
+AND t.`business_id` IN (SELECT tb.`business_id` FROM tb_business tb WHERE tb.`business_type`='T251' OR tb.`business_type` IN('T160','T170'))
+UNION
+SELECT IFNULL(SUM(t.`full_borrow_money`),0) AS sum_amt,DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -3 MONTH),'%Y-%m') date_time,'small' AS business_type FROM tb_issue_business t JOIN tb_issue ti ON t.`issue_id`=ti.`IssueId` WHERE ti.queryFullsuccessDate IS NOT NULL
+AND DATE_FORMAT(ti.queryFullsuccessDate,'%Y-%m')=DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -3 MONTH),'%Y-%m')
+AND t.`business_id` IN (SELECT tb.`business_id` FROM tb_business tb WHERE tb.`business_type`='T251' OR tb.`business_type` IN('T160','T170'))
+UNION
+SELECT IFNULL(SUM(t.`full_borrow_money`),0) AS sum_amt,DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -2 MONTH),'%Y-%m') date_time,'small' AS business_type FROM tb_issue_business t JOIN tb_issue ti ON t.`issue_id`=ti.`IssueId` WHERE ti.queryFullsuccessDate IS NOT NULL
+AND DATE_FORMAT(ti.queryFullsuccessDate,'%Y-%m')=DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -2 MONTH),'%Y-%m')
+AND t.`business_id` IN (SELECT tb.`business_id` FROM tb_business tb WHERE tb.`business_type`='T251' OR tb.`business_type` IN('T160','T170'))
+UNION
+SELECT IFNULL(SUM(t.`full_borrow_money`),0) AS sum_amt,DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -1 MONTH),'%Y-%m') date_time,'small' AS business_type FROM tb_issue_business t JOIN tb_issue ti ON t.`issue_id`=ti.`IssueId` WHERE ti.queryFullsuccessDate IS NOT NULL
+AND DATE_FORMAT(ti.queryFullsuccessDate,'%Y-%m')=DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL -1 MONTH),'%Y-%m')
+AND t.`business_id` IN (SELECT tb.`business_id` FROM tb_business tb WHERE tb.`business_type`='T251' OR tb.`business_type` IN('T160','T170'))
+UNION
+SELECT IFNULL(SUM(t.`full_borrow_money`),0) AS sum_amt,DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL 0 MONTH),'%Y-%m') date_time,'small' AS business_type FROM tb_issue_business t JOIN tb_issue ti ON t.`issue_id`=ti.`IssueId` WHERE ti.queryFullsuccessDate IS NOT NULL
+AND DATE_FORMAT(ti.queryFullsuccessDate,'%Y-%m')=DATE_FORMAT(DATE_ADD(CURDATE(),INTERVAL 0 MONTH),'%Y-%m')
+AND t.`business_id` IN (SELECT tb.`business_id` FROM tb_business tb WHERE tb.`business_type`='T251' OR tb.`business_type` IN('T160','T170'))
+    </select>
+
+</mapper>
